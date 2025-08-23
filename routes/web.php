@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EcommerceController;
 use App\Http\Controllers\Admin\HashTagController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,13 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::prefix('tags')->name('tags.')->group(function () {
         Route::get('ajax-get-list', [HashTagController::class, 'ajaxGetList'])->name('ajaxGetList');
     });
+    Route::prefix('ecommerce')->name('ecommerce.')->group(function () {
+        Route::get('/create', [EcommerceController::class, 'create'])->name('create');
+        Route::post('/store', [EcommerceController::class, 'store'])->name('store');
+    });
+    Route::get('media', function () {
+        return view('admin.modules.media.index');
+    })->name('media');
 });
 
 // Authentication routes
@@ -47,4 +55,4 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
  Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
      \UniSharp\LaravelFilemanager\Lfm::routes();
- });
+});

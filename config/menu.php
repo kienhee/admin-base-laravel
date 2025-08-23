@@ -19,6 +19,21 @@ return [
                 'url' => 'admin.blog.create',
             ],
         ],
-    ]
+    ],
+    [
+        'title' => 'Bán hàng',
+        'icon' => 'bx-cart-alt',
+        'children' => [
+            [
+                'title' => 'Thêm mới',
+                'url' => 'admin.ecommerce.create',
+            ],
+        ],
+    ],
+    [
+        'title' => 'Media',
+        'icon' => 'bx-image',
+        'url' => 'admin.media',
+    ],
 
 ];

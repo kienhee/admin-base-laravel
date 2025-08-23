@@ -3,8 +3,8 @@
 
   // Resolve target elements (hidden input + preview box)
   function resolveTargets($trigger) {
-    const inputSelector = $trigger.data('targetInput') || '#thumbnail';
-    const previewSelector = $trigger.data('targetPreview') || '#upload_box';
+    let inputSelector = $trigger.data('targetInput') || '#thumbnail';
+    let previewSelector = $trigger.data('targetPreview') || '#upload_box';
     return {
       $input: $(inputSelector),
       $preview: $(previewSelector)
@@ -13,8 +13,8 @@
 
   // Open LFM window with sane default size
   function openFileManager(url) {
-    const w = Math.min(1200, window.screen.width);
-    const h = Math.min(800, window.screen.height);
+    let w = Math.min(1200, window.screen.width);
+    let h = Math.min(800, window.screen.height);
     window.open(url, 'FileManager', `width=${w},height=${h},resizable=yes,scrollbars=yes`);
   }
 
@@ -24,9 +24,9 @@
     return this.off('click.fm').on('click.fm', function (e) {
       e.preventDefault();
 
-      const route_prefix = (options && options.prefix) ? options.prefix.replace(/\/$/, '') : '/filemanager';
-      const $trigger = $(this);
-      const { $input, $preview } = resolveTargets($trigger);
+      let route_prefix = (options && options.prefix) ? options.prefix.replace(/\/$/, '') : '/filemanager';
+      let $trigger = $(this);
+      let { $input, $preview } = resolveTargets($trigger);
 
       // Open
       openFileManager(`${route_prefix}?type=${encodeURIComponent(type)}`);
@@ -34,9 +34,9 @@
       // Callback from LFM
       window.SetUrl = function (items) {
         if (!items || !items.length) return;
-        const item = items[0];
-        const fileUrl = item.url || '';
-        const thumbUrl = item.thumb_url || fileUrl;
+        let item = items[0];
+        let fileUrl = item.url || '';
+        let thumbUrl = item.thumb_url || fileUrl;
 
         // Set value & trigger validators
         if ($input.length) {
@@ -45,7 +45,7 @@
 
         if ($preview.length) {
           $preview.empty();
-          const $img = $('<img>', {
+          let $img = $('<img>', {
             src: thumbUrl,
             alt: 'Thumbnail preview',
             class: 'upload_btn',
@@ -81,12 +81,12 @@
     $('.upload_btn').filemanager('image', { prefix: '/filemanager' });
 
     // If thumbnail already has value, render preview and keep re-pick ability
-    const $input = $('#thumbnail');
-    const $preview = $('#upload_box');
+    let $input = $('#thumbnail');
+    let $preview = $('#upload_box');
     if ($input.length && $input.val()) {
-      const url = $input.val();
+      let url = $input.val();
       $preview.empty();
-      const $img = $('<img>', {
+      let $img = $('<img>', {
         src: url,
         alt: 'Thumbnail preview',
         class: 'upload_btn',

@@ -9,12 +9,14 @@ export default defineConfig({
                 'resources/js/app.js',
                 //Common
                 'resources/js/common/generate-slug.js',
+                'resources/js/common/upload-images.js',
                 'resources/js/common/upload-image-alone.js',
                 'resources/js/common/forms-selects.js',
                 'resources/js/common/full-editor.js',
                 //page
                 'resources/js/pages/blog.js',
                 'resources/js/pages/auth.js',
+                'resources/js/pages/ecommerce-product-add.js',
             ],
             refresh: true,
         }),

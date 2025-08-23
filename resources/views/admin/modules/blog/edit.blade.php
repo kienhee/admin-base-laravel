@@ -66,7 +66,7 @@
                         <div class="card-body">
                             <div id="upload_box">
                                 <div class="my-5 d-flex justify-content-center align-items-center">
-                                    <button class="btn btn-primary upload_btn">Chọn ảnh từ máy</button>
+                                    <button class="btn bg-label-primary upload_btn">Chọn ảnh từ máy</button>
                                 </div>
                             </div>
                             <div class="fallback">
