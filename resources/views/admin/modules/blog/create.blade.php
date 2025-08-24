@@ -94,7 +94,7 @@
                                 <select id="category_id" name="category_id" class="select2 form-select"
                                     data-allow-clear="true">
                                     <option value="">Vui lòng chọn</option>
-                                    @foreach ($hashtags as $item)
+                                    @foreach ($categories as $item)
                                         <option value="{{ $item->id }}" @selected(old('category_id') == $item->id)>
                                             {{ $item->name }}
                                         </option>

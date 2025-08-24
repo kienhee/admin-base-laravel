@@ -23,7 +23,7 @@ $(function () {
         select2.each(function () {
             var $this = $(this);
             $this.wrap('<div class="position-relative"></div>').select2({
-                placeholder: "--Vui lòng chọn--",
+                placeholder: $this.data("placeholder") || "--Vui lòng chọn--",
                 dropdownParent: $this.parent(),
             });
         });

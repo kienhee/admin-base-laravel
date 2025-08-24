@@ -1,16 +1,15 @@
 @extends('admin.layouts.master')
 @section("title", "Thêm sản phẩm")
 @section('vendor-css')
-    <link rel="stylesheet" href="{{ Admin::asset_admin_url('assets/vendor/libs/quill/typography.css') }}" />
     <link rel="stylesheet" href="{{ Admin::asset_admin_url('assets/vendor/libs/select2/select2.css') }}" />
     <link rel="stylesheet" href="{{ Admin::asset_admin_url('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
     <link rel="stylesheet" href="{{ Admin::asset_admin_url('assets/vendor/libs/tagify/tagify.css') }}" />
-    <link rel="stylesheet" href="{{ Admin::asset_admin_url('assets/vendor/libs/lightbox2/css/lightbox.min.css') }}" />
+    <link rel="stylesheet" href="{{ Admin::asset_admin_url('assets/vendor/libs/@form-validation/form-validation.css') }}" />
     @include('admin.layouts.sections.tinymce-config')
 @endsection
 @section("content")
     <section>
-        <form action="{{ route('admin.ecommerce.store') }}" method="POST" class="app-ecommerce">
+        <form id="form_ecommerce" action="{{ route('admin.ecommerce.store') }}" method="POST" class="app-ecommerce">
             @csrf
             <!-- Add Product -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
@@ -36,19 +35,16 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label" for="title">Tên sản phẩm</label>
-                                <input type="text" class="form-control" id="title" placeholder="Tiêu đề sản phẩm"
-                                    name="title" aria-label="Product title" />
+                                <input type="text" class="form-control" id="title" placeholder="Tiêu đề sản phẩm" name="title" value="{{ old('title') }}"/>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label class="form-label" for="sku">SKU</label>
-                                    <input type="number" class="form-control" id="sku" placeholder="SKU" name="sku"
-                                        aria-label="Product SKU" />
+                                    <label class="form-label" for="sku">SKU <span class="text-muted">(Tùy chọn)</span></label>
+                                    <input type="number" class="form-control" id="sku" placeholder="SKU" name="sku" value="{{ old('sku') }}"/>
                                 </div>
                                 <div class="col">
-                                    <label class="form-label" for="barcode">Barcode</label>
-                                    <input type="text" class="form-control" id="barcode" placeholder="0123-4567"
-                                        name="barcode" aria-label="Product barcode" />
+                                    <label class="form-label" for="barcode">Barcode <span class="text-muted">(Tùy chọn)</span></label>
+                                    <input type="text" class="form-control" id="barcode" placeholder="0123-4567" name="barcode" value="{{ old('barcode') }}"/>
                                 </div>
                             </div>
                             <!-- Description -->
@@ -72,8 +68,8 @@
 
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title mb-0" id="upload-avatar">Phương tiện</h5>
-                            <small class="text-muted">Format:</small>
+                            <h5 class="card-title mb-0" id="upload-avatar">Hình ảnh</h5>
+                            <small class="text-muted">Tỉ lệ: 1:1 or 3:4</small>
                         </div>
                         <div class="card-body">
                             <div id="upload_box">
@@ -82,7 +78,7 @@
                                 </div>
                             </div>
                             <div class="fallback">
-                                <input id="thumbnail" name="thumbnail" type="hidden" value="{{ old('thumbnail') }}"
+                                <input class="images" name="images" type="hidden" value="{{ old('images') }}"
                                     required />
                             </div>
                         </div>
@@ -138,33 +134,33 @@
                                     <div class="d-flex justify-content-between flex-column mb-3 mb-md-0 pe-md-3">
                                         <ul class="nav nav-align-left nav-pills flex-column">
                                             <li class="nav-item">
-                                                <button class="nav-link active" data-bs-toggle="tab"
+                                                <button type="button" class="nav-link active" data-bs-toggle="tab"
                                                     data-bs-target="#restock">
                                                     <i class="bx bx-cube me-2"></i>
                                                     <span class="align-middle">Nhập kho</span>
                                                 </button>
                                             </li>
                                             <li class="nav-item">
-                                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipping">
+                                                <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#shipping">
                                                     <i class="bx bx-car me-2"></i>
                                                     <span class="align-middle">Vận chuyển</span>
                                                 </button>
                                             </li>
                                             <li class="nav-item">
-                                                <button class="nav-link" data-bs-toggle="tab"
+                                                <button type="button" class="nav-link" data-bs-toggle="tab"
                                                     data-bs-target="#global-delivery">
                                                     <i class="bx bx-globe me-2"></i>
                                                     <span class="align-middle">Giao hàng toàn cầu</span>
                                                 </button>
                                             </li>
                                             <li class="nav-item">
-                                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#attributes">
+                                                <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#attributes">
                                                     <i class="bx bx-link me-2"></i>
                                                     <span class="align-middle">Thuộc tính</span>
                                                 </button>
                                             </li>
                                             <li class="nav-item">
-                                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#advanced">
+                                                <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#advanced">
                                                     <i class="bx bx-lock me-2"></i>
                                                     <span class="align-middle">Nâng cao</span>
                                                 </button>
@@ -356,27 +352,25 @@
                         <div class="card-body">
                             <!-- Base Price -->
                             <div class="mb-3">
-                                <label class="form-label" for="price">Giá gốc</label>
-                                <input type="number" class="form-control" id="price" placeholder="Giá" name="productPrice"
-                                    aria-label="Product price" />
+                                <label class="form-label" for="base_price">Giá gốc</label>
+                                <input type="text" class="form-control format-money" id="base_price" placeholder="Giá" name="base_price" value="{{ old('base_price') }}"/>
                             </div>
                             <!-- Discounted Price -->
                             <div class="mb-3">
-                                <label class="form-label" for="discount-price">Giá khuyến mãi</label>
-                                <input type="number" class="form-control" id="discount-price" placeholder="Giá khuyến mãi"
-                                    name="productDiscountedPrice" aria-label="Product discounted price" />
+                                <label class="form-label" for="sale_price">Giá khuyến mãi <span class="text-muted">(Tùy chọn)</span></label>
+                                <input type="text" class="form-control format-money" id="sale_price" placeholder="Giá khuyến mãi" name="sale_price" value="{{ old('sale_price') }}" />
                             </div>
                             <!-- Charge tax check box -->
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="price-charge-tax" checked />
-                                <label class="form-label" for="price-charge-tax"> Tính thuế cho sản phẩm này </label>
+                                <input class="form-check-input" type="checkbox" value="1" id="is_tax" name="is_tax" @checked(old('is_tax')) />
+                                <label class="form-label" for="is_tax"> Tính thuế cho sản phẩm này </label>
                             </div>
                             <!-- Instock switch -->
                             <div class="d-flex justify-content-between align-items-center border-top pt-3">
                                 <span class="mb-0 h6">Còn hàng</span>
                                 <div class="w-25 d-flex justify-content-end">
                                     <label class="switch switch-primary switch-sm me-4 pe-2">
-                                        <input type="checkbox" class="switch-input" checked="" />
+                                        <input type="checkbox" class="switch-input" name="is_in_stock" @checked(old('is_in_stock', true)) />
                                         <span class="switch-toggle-slider">
                                             <span class="switch-on">
                                                 <span class="switch-off"></span>
@@ -396,55 +390,57 @@
                         <div class="card-body">
                             <!-- Vendor -->
                             <div class="mb-3 col ecommerce-select2-dropdown">
-                                <label class="form-label mb-1" for="vendor"> Nhà cung cấp </label>
-                                <select id="vendor" class="select2 form-select" data-placeholder="Chọn nhà cung cấp">
+                                <label class="form-label mb-1" for="supplier_id"> Nhà cung cấp <span class="text-muted">(Tùy chọn)</span></label>
+                                <select id="supplier_id" name="supplier_id" class="select2 form-select" data-placeholder="Chọn nhà cung cấp">
                                     <option value="">Chọn nhà cung cấp</option>
-                                    <option value="men-clothing">Quần áo nam</option>
-                                    <option value="women-clothing">Quần áo nữ</option>
-                                    <option value="kid-clothing">Quần áo trẻ em</option>
+                                    <option value="men-clothing" @selected(old('supplier_id') == 'men-clothing')>Quần áo nam</option>
+                                    <option value="women-clothing" @selected(old('supplier_id') == 'women-clothing')>Quần áo nữ</option>
+                                    <option value="kid-clothing" @selected(old('supplier_id') == 'kid-clothing')>Quần áo trẻ em</option>
                                 </select>
                             </div>
                             <!-- Category -->
-                            <div class="mb-3 col ecommerce-select2-dropdown">
-                                <label class="form-label mb-1 d-flex justify-content-between align-items-center"
-                                    for="category-org">
-                                    <span>Danh mục</span><a href="javascript:void(0);" class="fw-medium">Thêm danh mục
-                                        mới</a>
-                                </label>
-                                <select id="category-org" class="select2 form-select" data-placeholder="Chọn danh mục">
-                                    <option value="">Chọn danh mục</option>
-                                    <option value="Household">Gia dụng</option>
-                                    <option value="Management">Quản lý</option>
-                                    <option value="Electronics">Điện tử</option>
-                                    <option value="Office">Văn phòng</option>
-                                    <option value="Automotive">Ô tô</option>
+                            <div class="mb-3 select2-primary">
+                                <label class="form-label" for="category_id">Danh mục</label>
+                                <select id="category_id" name="category_id" class="select2 form-select"
+                                    data-allow-clear="true">
+                                    <option value="">Vui lòng chọn</option>
+                                    @foreach ($categories as $item)
+                                        <option value="{{ $item->id }}" @selected(old('category_id') == $item->id)>
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             <!-- Collection -->
                             <div class="mb-3 col ecommerce-select2-dropdown">
-                                <label class="form-label mb-1" for="collection">Bộ sưu tập </label>
-                                <select id="collection" class="select2 form-select" data-placeholder="Bộ sưu tập">
+                                <label class="form-label mb-1" for="collection_id">Bộ sưu tập <span class="text-muted">(Tùy chọn)</span></label>
+                                <select id="collection_id" name="collection_id" class="select2 form-select" data-placeholder="Bộ sưu tập">
                                     <option value="">Bộ sưu tập</option>
-                                    <option value="men-clothing">Quần áo nam</option>
-                                    <option value="women-clothing">Quần áo nữ</option>
-                                    <option value="kid-clothing">Quần áo trẻ em</option>
+                                    <option value="men-clothing" @selected(old('collection_id') == 'men-clothing')>Quần áo nam</option>
+                                    <option value="women-clothing" @selected(old('collection_id') == 'women-clothing')>Quần áo nữ</option>
+                                    <option value="kid-clothing" @selected(old('collection_id') == 'kid-clothing')>Quần áo trẻ em</option>
                                 </select>
                             </div>
                             <!-- Status -->
                             <div class="mb-3 col ecommerce-select2-dropdown">
-                                <label class="form-label mb-1" for="status-org">Trạng thái </label>
-                                <select id="status-org" class="select2 form-select" data-placeholder="Đã xuất bản">
+                                <label class="form-label mb-1" for="status">Trạng thái </label>
+                                <select id="status" name="status" class="select2 form-select" data-placeholder="Đã xuất bản">
                                     <option value="">Đã xuất bản</option>
-                                    <option value="Published">Đã xuất bản</option>
-                                    <option value="Scheduled">Đã lên lịch</option>
-                                    <option value="Inactive">Không hoạt động</option>
+                                    <option value="Published" @selected(old('status') == 'Published')>Đã xuất bản</option>
+                                    <option value="Scheduled" @selected(old('status') == 'Scheduled')>Đã lên lịch</option>
+                                    <option value="Inactive" @selected(old('status') == 'Inactive')>Không hoạt động</option>
                                 </select>
                             </div>
                             <!-- Tags -->
-                            <div class="mb-3">
-                                <label for="tags" class="form-label mb-1">Thẻ</label>
-                                <input id="tags" class="form-control" name="tags" value="Thường,Tiêu chuẩn,Cao cấp"
-                                    aria-label="Product Tags" />
+                            <div class="mb-3 select2-danger">
+                                <label class="form-label" for="hashtag">Hashtags</label>
+                                <select id="hashtag" class="select2 form-select" multiple data-allow-clear="true"
+                                    name="hashtags[]">
+                                    @foreach ($hashtags as $item)
+                                        <option value="{{ $item->id }}" @selected(in_array($item->id, old('hashtags', [])))>
+                                            {{ $item->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -459,17 +455,18 @@
     <script src="{{ Admin::asset_admin_url('assets/vendor/libs/select2/select2.js') }}"></script>
     <script src="{{ Admin::asset_admin_url('assets/vendor/libs/jquery-repeater/jquery-repeater.js') }}"></script>
     <script src="{{ Admin::asset_admin_url('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
-    <script src="{{ Admin::asset_admin_url('assets/vendor/libs/tagify/tagify.js') }}"></script>
     <script src="{{ Admin::asset_admin_url('assets/vendor/libs/sortable/sortable.min.js') }}"></script>
-    <script src="{{ Admin::asset_admin_url('assets/vendor/libs/lightbox2/js/lightbox.min.js') }}"></script>
+    <script src="{{ Admin::asset_admin_url('assets/vendor/libs/@form-validation/popular.js') }}"></script>
+    <script src="{{ Admin::asset_admin_url('assets/vendor/libs/@form-validation/bootstrap5.js') }}"></script>
+    <script src="{{ Admin::asset_admin_url('assets/vendor/libs/@form-validation/auto-focus.js') }}"></script>
 @endsection
 @section('page-js')
     @vite([
         // -------Common -------
-        'resources/js/common/generate-slug.js',
+        'resources/js/common/helper.js',
         'resources/js/common/upload-images.js',
         'resources/js/common/forms-selects.js',
         // -------Pages -------
-        'resources/js/pages/ecommerce-product-add.js'
+        'resources/js/pages/ecommerce.js'
     ])
 @endsection

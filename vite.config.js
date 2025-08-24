@@ -8,6 +8,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 //Common
+                'resources/js/common/helper.js',
                 'resources/js/common/generate-slug.js',
                 'resources/js/common/upload-images.js',
                 'resources/js/common/upload-image-alone.js',
@@ -16,7 +17,7 @@ export default defineConfig({
                 //page
                 'resources/js/pages/blog.js',
                 'resources/js/pages/auth.js',
-                'resources/js/pages/ecommerce-product-add.js',
+                'resources/js/pages/ecommerce.js',
             ],
             refresh: true,
         }),

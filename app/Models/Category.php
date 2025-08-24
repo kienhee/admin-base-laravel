@@ -20,5 +20,16 @@ class Category extends Model
         'status',
     ];
 
-    
+    const TYPE_BLOG = 'blog';
+    const TYPE_PRODUCT = 'product';
+
+    public static function getCategoryBlog()
+    {
+        return self::where('type', self::TYPE_BLOG)->orderBy('created_at', 'desc')->get();
+    }
+
+    public static function getCategoryProduct()
+    {
+        return self::where('type', self::TYPE_PRODUCT)->orderBy('created_at', 'desc')->get();
+    }
 }

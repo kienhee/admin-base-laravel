@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\BlogHashtag;
+use App\Models\Category;
 use App\Models\HashTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,8 @@ class BlogController extends Controller
         $blogModel = new Blog();
         $hashtags = HashTag::all();
         $statusLabels = $blogModel->getStatusLabel();
-        return view('admin.modules.blog.create', compact('hashtags', 'statusLabels'));
+        $categories = Category::getCategoryBlog();
+        return view('admin.modules.blog.create', compact('hashtags', 'statusLabels', 'categories'));
     }
 
     public function store(Request $request)
@@ -86,7 +88,8 @@ class BlogController extends Controller
         $data = $grid->where('blogs.slug', $slug)->first();
         $hashtags = HashTag::all();
         $statusLabels = $blogModel->getStatusLabel();
-        return view('admin.modules.blog.edit', compact('data','hashtags', 'statusLabels'));
+        $categories = Category::getCategoryBlog();
+        return view('admin.modules.blog.edit', compact('data','hashtags', 'statusLabels', 'categories'));
     }
     public function update(Request $request, $id)
     {

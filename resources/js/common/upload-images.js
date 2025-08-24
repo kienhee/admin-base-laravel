@@ -1,10 +1,8 @@
 (function ($) {
     "use strict";
-console.log(window.screen.width);
-
     function openFileManager(url) {
-        let w = Math.min(1200, window.screen.width);
-        let h = Math.min(800, window.screen.height);
+        let w = window.screen.width;
+        let h = window.screen.height;
         window.open(
             url,
             "FileManager",
