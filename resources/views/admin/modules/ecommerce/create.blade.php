@@ -23,7 +23,7 @@
                     <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
                 </div>
             </div>
-
+            @include('admin.components.showMessage')
             <div class="row">
                 <!-- First column-->
                 <div class="col-12 col-lg-8">
@@ -78,7 +78,7 @@
                                 </div>
                             </div>
                             <div class="fallback">
-                                <input class="images" name="images" type="hidden" value="{{ old('images') }}"
+                                <input id="images" name="images" type="hidden" value="{{ old('images') }}"
                                     required />
                             </div>
                         </div>
@@ -90,40 +90,41 @@
                             <h5 class="card-title mb-0">Biến thể</h5>
                         </div>
                         <div class="card-body">
-                            <form class="form-repeater">
-                                <div data-repeater-list="group-a">
-                                    <div data-repeater-item>
-                                        <div class="row">
-                                            <div class="mb-3 col-4">
-                                                <label class="form-label" for="form-repeater-1-1">Tùy chọn</label>
-                                                <select id="form-repeater-1-1" class="select2 form-select"
-                                                    data-placeholder="Kích thước">
-                                                    <option value="">Kích thước</option>
-                                                    <option value="size">Kích thước</option>
-                                                    <option value="color">Màu sắc</option>
-                                                    <option value="weight">Trọng lượng</option>
-                                                    <option value="smell">Mùi</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="mb-3 col-8">
-                                                <label class="form-label invisible" for="form-repeater-1-2">Không
-                                                    hiển thị</label>
-                                                <input type="text" id="form-repeater-1-2" class="form-control"
-                                                    placeholder="Nhập kích thước" />
+                            <div class="form-repeater">
+                                <div data-repeater-list="variants">
+                                    @php
+                                        $oldVariants = old('variants', [ ['option' => '', 'value' => ''] ]);
+                                    @endphp
+                                    @foreach ($oldVariants as $i => $variant)
+                                        <div data-repeater-item>
+                                            <div class="row">
+                                                <div class="mb-3 col-4">
+                                                    <label class="form-label" for="form-repeater-{{ $i }}-1">Tùy chọn</label>
+                                                    <select id="form-repeater-{{ $i }}-1" class="select2 form-select" name="variants[{{ $i }}][option]" data-placeholder="Vui lòng chọn">
+                                                        <option value="" @selected($variant['option'] == '')></option>
+                                                        <option value="size" @selected($variant['option'] == 'size')>Kích thước</option>
+                                                        <option value="color" @selected($variant['option'] == 'color')>Màu sắc</option>
+                                                        <option value="weight" @selected($variant['option'] == 'weight')>Trọng lượng</option>
+                                                        <option value="smell" @selected($variant['option'] == 'smell')>Mùi</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3 col-8">
+                                                    <label class="form-label invisible" for="form-repeater-{{ $i }}-2">Không hiển thị</label>
+                                                    <input type="text" id="form-repeater-{{ $i }}-2" class="form-control" name="variants[{{ $i }}][value]" placeholder="Vui lòng nhập giá trị" value="{{ $variant['value'] ?? '' }}" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                                 <div>
-                                    <button class="btn btn-primary" data-repeater-create>Thêm tùy chọn khác</button>
+                                    <button type="button" class="btn btn-primary" data-repeater-create>Thêm tùy chọn khác</button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                     <!-- /Variants -->
                     <!-- Inventory -->
-                    <div class="card mb-4">
+                    {{-- <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Kho hàng</h5>
                         </div>
@@ -337,7 +338,7 @@
                                 <!-- /Options-->
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- /Inventory -->
                 </div>
                 <!-- /Second column -->
@@ -392,17 +393,19 @@
                             <div class="mb-3 col ecommerce-select2-dropdown">
                                 <label class="form-label mb-1" for="supplier_id"> Nhà cung cấp <span class="text-muted">(Tùy chọn)</span></label>
                                 <select id="supplier_id" name="supplier_id" class="select2 form-select" data-placeholder="Chọn nhà cung cấp">
-                                    <option value="">Chọn nhà cung cấp</option>
-                                    <option value="men-clothing" @selected(old('supplier_id') == 'men-clothing')>Quần áo nam</option>
-                                    <option value="women-clothing" @selected(old('supplier_id') == 'women-clothing')>Quần áo nữ</option>
-                                    <option value="kid-clothing" @selected(old('supplier_id') == 'kid-clothing')>Quần áo trẻ em</option>
+                                    <option value=""></option>
+                                    @foreach ($suppliers as $item)
+                                        <option value="{{ $item->id }}" @selected(old('supplier_id') == $item->id)>
+                                            {{ $item->company_name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             <!-- Category -->
                             <div class="mb-3 select2-primary">
                                 <label class="form-label" for="category_id">Danh mục</label>
                                 <select id="category_id" name="category_id" class="select2 form-select"
-                                    data-allow-clear="true">
+                                    data-allow-clear="true" data-placeholder="Chọn danh mục">
                                     <option value="">Vui lòng chọn</option>
                                     @foreach ($categories as $item)
                                         <option value="{{ $item->id }}" @selected(old('category_id') == $item->id)>
@@ -415,20 +418,24 @@
                             <div class="mb-3 col ecommerce-select2-dropdown">
                                 <label class="form-label mb-1" for="collection_id">Bộ sưu tập <span class="text-muted">(Tùy chọn)</span></label>
                                 <select id="collection_id" name="collection_id" class="select2 form-select" data-placeholder="Bộ sưu tập">
-                                    <option value="">Bộ sưu tập</option>
-                                    <option value="men-clothing" @selected(old('collection_id') == 'men-clothing')>Quần áo nam</option>
-                                    <option value="women-clothing" @selected(old('collection_id') == 'women-clothing')>Quần áo nữ</option>
-                                    <option value="kid-clothing" @selected(old('collection_id') == 'kid-clothing')>Quần áo trẻ em</option>
+                                    <option value=""></option>
+                                    @foreach ($collections as $item)
+                                        <option value="{{ $item->id }}" @selected(old('collection_id') == $item->id)>
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             <!-- Status -->
                             <div class="mb-3 col ecommerce-select2-dropdown">
                                 <label class="form-label mb-1" for="status">Trạng thái </label>
                                 <select id="status" name="status" class="select2 form-select" data-placeholder="Đã xuất bản">
-                                    <option value="">Đã xuất bản</option>
-                                    <option value="Published" @selected(old('status') == 'Published')>Đã xuất bản</option>
-                                    <option value="Scheduled" @selected(old('status') == 'Scheduled')>Đã lên lịch</option>
-                                    <option value="Inactive" @selected(old('status') == 'Inactive')>Không hoạt động</option>
+                                    <option value=""></option>
+                                    @foreach ($status as $key => $item)
+                                        <option value="{{ $key }}" @selected(old('status', App\Models\Product::STATUS_PUBLISHED) == $key)>
+                                            {{ $item }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             <!-- Tags -->

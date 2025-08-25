@@ -20,7 +20,7 @@
                 options && options.prefix
                     ? options.prefix.replace(/\/$/, "")
                     : "/filemanager";
-            let $input = $("#thumbnail");
+            let $input = $("#images");
             let $preview = $("#upload_box");
 
             openFileManager(`${route_prefix}?type=${encodeURIComponent(type)}`);
@@ -56,7 +56,7 @@
         urls.forEach((url, index) => {
             let $imgWrapper = $("<div>", { class: "preview-item" });
 
-            let $img = $("<img>", { src: url, alt: "Thumbnail preview" });
+            let $img = $("<img>", { src: url, alt: "images preview" });
 
             let $removeBtn = $("<button>", {
                 type: "button",
@@ -94,7 +94,7 @@
         // gắn cho nút ban đầu
         $(".upload_btn").filemanager("image", { prefix: "/filemanager" });
 
-        let $input = $("#thumbnail");
+        let $input = $("#images");
         let $preview = $("#upload_box");
 
         // render nếu có dữ liệu cũ
@@ -116,7 +116,7 @@
                 $("#upload_box .preview-item img").each(function () {
                     urls.push($(this).attr("src"));
                 });
-                $("#thumbnail").val(urls.join(",")).trigger("change");
+                $("#images").val(urls.join(",")).trigger("change");
             },
         });
     }

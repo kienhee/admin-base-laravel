@@ -23,9 +23,10 @@ class Admin
      * Summary of handleSeedMigration
      * @param mixed $tableName
      * @param mixed $version
+     * @param bool $isTruncate
      * @return bool
      */
-    public static function SeedMigration($tableName, $version)
+    public static function SeedMigration($tableName, $version, $isTruncate = true)
     {
         if (empty($tableName) || empty($version)) {
             Log::error('Missing table name or version');
@@ -48,7 +49,10 @@ class Admin
             return false;
         }
 
-        DB::table($tableName)->truncate();
+        if ($isTruncate) {
+            DB::table($tableName)->truncate();
+        }
+
         DB::table('migrations')->where('migration', $migrationName)->update([
             'batch' => $version,
         ]);

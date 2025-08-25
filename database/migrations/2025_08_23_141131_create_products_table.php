@@ -18,17 +18,17 @@ return new class extends Migration
             $table->string('sku')->nullable();
             $table->string('barcode')->nullable();
             $table->text('description')->nullable();
-            $table->json('images');
+            $table->text('images');
             $table->json('variants');
             $table->integer('base_price');
-            $table->integer('sale_price')->nullable()->max(100);
+            $table->integer('sale_price')->nullable();
             $table->boolean('is_tax')->default(false)->comment('Áp dụng thuế');
             $table->boolean('is_in_stock')->default(false)->comment('Còn hàng');
             $table->bigInteger('supplier_id')->unsigned()->comment('Nhà cung cấp');
             $table->bigInteger('category_id')->unsigned();
             $table->bigInteger('collection_id')->unsigned();
             $table->enum('status', ['draft', 'scheduled', 'published'])->default('published');
-            $table->text('description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

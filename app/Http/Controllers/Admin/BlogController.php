@@ -27,7 +27,7 @@ class BlogController extends Controller
     public function create()
     {
         $blogModel = new Blog();
-        $hashtags = HashTag::all();
+        $hashtags = HashTag::getHashTagByType('blog');
         $statusLabels = $blogModel->getStatusLabel();
         $categories = Category::getCategoryBlog();
         return view('admin.modules.blog.create', compact('hashtags', 'statusLabels', 'categories'));
@@ -86,7 +86,7 @@ class BlogController extends Controller
         $blogModel = new Blog();
         $grid = $blogModel->dataGrid();
         $data = $grid->where('blogs.slug', $slug)->first();
-        $hashtags = HashTag::all();
+        $hashtags = HashTag::getHashTagByType('blog');
         $statusLabels = $blogModel->getStatusLabel();
         $categories = Category::getCategoryBlog();
         return view('admin.modules.blog.edit', compact('data','hashtags', 'statusLabels', 'categories'));

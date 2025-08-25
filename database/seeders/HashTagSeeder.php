@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class HashTagSeeder extends Seeder
 {
     public $tableName = 'hash_tags';
-    public $version = 1;
+    public $version = 2;
 
     /**
      * Run the database seeds.
@@ -18,12 +18,16 @@ class HashTagSeeder extends Seeder
     public function run(): void
     {
         if (Admin::SeedMigration($this->tableName, $this->version)) {
+            // Update các hashtag cũ, set type = 'blog'
+            DB::table($this->tableName)->whereNull('type')->orWhere('type', '!=', 'product')->update(['type' => 'blog']);
 
+            // Thêm mới các hashtag cũ nếu chưa có type
             DB::table($this->tableName)->insert([
                 [
                     'name' => 'Artificial Intelligence',
                     'slug' => 'artificial-intelligence',
                     'isTrending' => true,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -31,6 +35,7 @@ class HashTagSeeder extends Seeder
                     'name' => 'Machine Learning',
                     'slug' => 'machine-learning',
                     'isTrending' => true,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -38,6 +43,7 @@ class HashTagSeeder extends Seeder
                     'name' => 'Blockchain',
                     'slug' => 'blockchain',
                     'isTrending' => false,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -45,6 +51,7 @@ class HashTagSeeder extends Seeder
                     'name' => 'Cloud Computing',
                     'slug' => 'cloud-computing',
                     'isTrending' => true,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -52,6 +59,7 @@ class HashTagSeeder extends Seeder
                     'name' => 'Cybersecurity',
                     'slug' => 'cybersecurity',
                     'isTrending' => false,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -59,6 +67,7 @@ class HashTagSeeder extends Seeder
                     'name' => 'Internet of Things',
                     'slug' => 'internet-of-things',
                     'isTrending' => false,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -66,6 +75,7 @@ class HashTagSeeder extends Seeder
                     'name' => 'Big Data',
                     'slug' => 'big-data',
                     'isTrending' => false,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -73,6 +83,7 @@ class HashTagSeeder extends Seeder
                     'name' => 'Virtual Reality',
                     'slug' => 'virtual-reality',
                     'isTrending' => false,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -80,6 +91,7 @@ class HashTagSeeder extends Seeder
                     'name' => 'Augmented Reality',
                     'slug' => 'augmented-reality',
                     'isTrending' => false,
+                    'type' => 'blog',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -87,6 +99,48 @@ class HashTagSeeder extends Seeder
                     'name' => 'DevOps',
                     'slug' => 'devops',
                     'isTrending' => true,
+                    'type' => 'blog',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                // 5 hashtag mới cho product
+                [
+                    'name' => 'Eco Friendly',
+                    'slug' => 'eco-friendly',
+                    'isTrending' => true,
+                    'type' => 'product',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Handmade',
+                    'slug' => 'handmade',
+                    'isTrending' => false,
+                    'type' => 'product',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Limited Edition',
+                    'slug' => 'limited-edition',
+                    'isTrending' => true,
+                    'type' => 'product',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Organic',
+                    'slug' => 'organic',
+                    'isTrending' => false,
+                    'type' => 'product',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Best Seller',
+                    'slug' => 'best-seller',
+                    'isTrending' => true,
+                    'type' => 'product',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
