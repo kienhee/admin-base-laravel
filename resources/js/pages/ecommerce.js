@@ -60,45 +60,52 @@ $(function () {
     }
 });
 
-$('#sale_price').on('focus input', function (e) {
-    let price = $('#base_price').val().replace(/[^0-9]/g, '');
+$("#sale_price").on("focus input", function (e) {
+    let price = $("#base_price")
+        .val()
+        .replace(/[^0-9]/g, "");
     price = parseInt(price || 0, 10);
 
     // Xoá span cũ trước khi render
-    $('#sale_price_message').remove();
+    $("#sale_price_message").remove();
 
     if (!price || price <= 0) {
         e.preventDefault();
-        $(this).val(''); // xoá nếu có gõ vào
-        let span = $(`<small id="sale_price_message" class="d-block mt-2 text-danger" style="display:none;">Vui lòng nhập giá gốc trước</small>`);
+        $(this).val(""); // xoá nếu có gõ vào
+        let span = $(
+            `<small id="sale_price_message" class="d-block mt-2 text-danger" style="display:none;">Vui lòng nhập giá gốc trước</small>`
+        );
         $(this).after(span);
         span.fadeIn();
         return; // không cho nhập tiếp
     }
 
     // Nếu có giá gốc thì xử lý như bình thường
-    let salePrice = $(this).val().replace(/[^0-9]/g, '');
+    let salePrice = $(this)
+        .val()
+        .replace(/[^0-9]/g, "");
     salePrice = parseInt(salePrice || 0, 10);
 
-    let message = '';
-    let type = 'error';
+    let message = "";
+    let type = "error";
 
     if (!salePrice || salePrice <= 0) {
-        message = 'Vui lòng nhập giá khuyến mãi hợp lệ';
+        message = "Vui lòng nhập giá khuyến mãi hợp lệ";
     } else if (salePrice > price) {
-        message = 'Giá khuyến mãi không được lớn hơn giá gốc';
+        message = "Giá khuyến mãi không được lớn hơn giá gốc";
     } else {
         let salePercent = (salePrice / price) * 100;
         message = `Tương đương ${salePercent.toFixed(2)}%`;
-        type = 'success';
+        type = "success";
     }
 
-    let color = (type === 'error') ? 'text-danger' : 'text-success';
-    let span = $(`<small id="sale_price_message" class="d-block mt-2 ${color}" style="display:none;">${message}</small>`);
+    let color = type === "error" ? "text-danger" : "text-success";
+    let span = $(
+        `<small id="sale_price_message" class="d-block mt-2 ${color}" style="display:none;">${message}</small>`
+    );
     $(this).after(span);
     span.fadeIn();
 });
-
 
 // form
 (function () {
@@ -131,7 +138,9 @@ $('#sale_price').on('focus input', function (e) {
                         callback: {
                             message: "Giá khuyến mãi phải nhỏ hơn giá gốc",
                             callback: function (input) {
-                                let base = $("#base_price").val().replace(/[^0-9]/g, "");
+                                let base = $("#base_price")
+                                    .val()
+                                    .replace(/[^0-9]/g, "");
                                 let sale = input.value.replace(/[^0-9]/g, "");
                                 if (sale === "") return true; // không bắt buộc
                                 return parseInt(sale) < parseInt(base || 0);
@@ -148,7 +157,9 @@ $('#sale_price').on('focus input', function (e) {
 
                 images: {
                     validators: {
-                        notEmpty: { message: "Vui lòng chọn ít nhất 1 hình ảnh" },
+                        notEmpty: {
+                            message: "Vui lòng chọn ít nhất 1 hình ảnh",
+                        },
                     },
                 },
             },
@@ -164,7 +175,11 @@ $('#sale_price').on('focus input', function (e) {
             },
             init: (instance) => {
                 instance.on("plugins.message.placed", (e) => {
-                    if (e.element.parentElement.classList.contains("input-group")) {
+                    if (
+                        e.element.parentElement.classList.contains(
+                            "input-group"
+                        )
+                    ) {
                         e.element.parentElement.insertAdjacentElement(
                             "afterend",
                             e.messageElement
@@ -175,3 +190,25 @@ $('#sale_price').on('focus input', function (e) {
         });
     }
 })();
+
+// handle delete click
+const $modal = $("#confirmDeleteModal");
+const $deleteForm = $("#deleteForm");
+const $deleteTitle = $("#deleteTitle");
+$(document).on("click", ".btn-delete", function () {
+    const url = $(this).data("url");
+    const title = $(this).data("title");
+    $deleteForm.attr("action", url);
+    $deleteTitle.text(title);
+    const modal = new bootstrap.Modal($modal[0]);
+    modal.show();
+});
+
+$("#confirmDeleteBtn").on("click", function (e) {
+    e.preventDefault();
+    $(this)
+        .prop("disabled", true)
+        .find(".spinner-border")
+        .removeClass("d-none");
+    $deleteForm.submit();
+});

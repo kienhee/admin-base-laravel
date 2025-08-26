@@ -12,7 +12,6 @@
 <script src="{{ Admin::asset_admin_url('assets/vendor/libs/i18n/i18n.js') }}"></script>
 <script src="{{ Admin::asset_admin_url('assets/vendor/libs/typeahead-js/typeahead.js') }}"></script>
 <script src="{{ Admin::asset_admin_url('assets/vendor/js/menu.js') }}"></script>
-
 {{-- endbuild --}}
 
 {{-- Vendors JS --}}

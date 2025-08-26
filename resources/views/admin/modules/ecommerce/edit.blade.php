@@ -1,5 +1,5 @@
 @extends('admin.layouts.master')
-@section("title", "Thêm sản phẩm")
+@section("title", $data->title)
 @section('vendor-css')
     <link rel="stylesheet" href="{{ Admin::asset_admin_url('assets/vendor/libs/select2/select2.css') }}" />
     <link rel="stylesheet" href="{{ Admin::asset_admin_url('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
@@ -9,17 +9,18 @@
 @endsection
 @section("content")
     <section>
-        <form id="form_ecommerce" action="{{ route('admin.ecommerce.store') }}" method="POST" class="app-ecommerce">
+        <form id="form_ecommerce" action="{{ route('admin.ecommerce.update', $data->id) }}" method="POST" class="app-ecommerce">
             @csrf
+            @method('PUT')
             <!-- Add Product -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                 <div class="d-flex flex-column justify-content-center">
-                    <h4 class="mb-1 mt-3">Thêm sản phẩm mới</h4>
-                    <p class="text-muted">Đơn hàng được đặt trên cửa hàng của bạn</p>
+                    <h4 class="mb-1 mt-3">{{ $data->title }}</h4>
+                    <p class="text-muted">Sửa thông tin sản phẩm trên cửa hàng của bạn</p>
                 </div>
                 <div class="d-flex align-content-center flex-wrap gap-3">
                     <a href="{{ route('admin.ecommerce.list') }}" class="btn btn-label-secondary">quay lại</a>
-                    <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
                 </div>
             </div>
             @include('admin.components.showMessage')
@@ -34,16 +35,16 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label" for="title">Tên sản phẩm</label>
-                                <input type="text" class="form-control" id="title" placeholder="Tiêu đề sản phẩm" name="title" value="{{ old('title') }}"/>
+                                <input type="text" class="form-control" id="title" placeholder="Tiêu đề sản phẩm" name="title" value="{{ old('title', $data->title) }}"/>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="sku">SKU <span class="text-muted">(Tùy chọn)</span></label>
-                                    <input type="number" class="form-control" id="sku" placeholder="SKU" name="sku" value="{{ old('sku') }}"/>
+                                    <input type="number" class="form-control" id="sku" placeholder="SKU" name="sku" value="{{ old('sku', $data->sku) }}"/>
                                 </div>
                                 <div class="col">
                                     <label class="form-label" for="barcode">Barcode <span class="text-muted">(Tùy chọn)</span></label>
-                                    <input type="text" class="form-control" id="barcode" placeholder="0123-4567" name="barcode" value="{{ old('barcode') }}"/>
+                                    <input type="text" class="form-control" id="barcode" placeholder="0123-4567" name="barcode" value="{{ old('barcode', $data->barcode) }}"/>
                                 </div>
                             </div>
                             <!-- Description -->
@@ -58,7 +59,7 @@
                                     <p class="mt-3">Loading editor...</p>
                                 </div>
                                 <!-- Textarea (hidden until TinyMCE is ready) -->
-                                <textarea id="editor" name="description" class="d-none">{{ old('description') }}</textarea>
+                                <textarea id="editor" name="description" class="d-none">{{ old('description', $data->description) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -77,7 +78,7 @@
                                 </div>
                             </div>
                             <div class="fallback">
-                                <input id="images" name="images" type="hidden" value="{{ old('images') }}"
+                                <input id="images" name="images" type="hidden" value="{{ old('images', $data->images) }}"
                                     required />
                             </div>
                         </div>
@@ -92,7 +93,7 @@
                             <div class="form-repeater">
                                 <div data-repeater-list="variants">
                                     @php
-                                        $oldVariants = old('variants', [ ['option' => '', 'value' => ''] ]);
+                                        $oldVariants = old('variants', json_decode($data->variants, true) ?? []);
                                     @endphp
                                     @foreach ($oldVariants as $i => $variant)
                                         <div data-repeater-item>
@@ -353,16 +354,16 @@
                             <!-- Base Price -->
                             <div class="mb-3">
                                 <label class="form-label" for="base_price">Giá gốc</label>
-                                <input type="text" class="form-control format-money" id="base_price" placeholder="Giá" name="base_price" value="{{ old('base_price') }}"/>
+                                <input type="text" class="form-control format-money" id="base_price" placeholder="Giá" name="base_price" value="{{ number_format((float)old('base_price', $data->base_price), 0, ',', '.') }}"/>
                             </div>
                             <!-- Discounted Price -->
                             <div class="mb-3">
                                 <label class="form-label" for="sale_price">Giá khuyến mãi <span class="text-muted">(Tùy chọn)</span></label>
-                                <input type="text" class="form-control format-money" id="sale_price" placeholder="Giá khuyến mãi" name="sale_price" value="{{ old('sale_price') }}" />
+                                <input type="text" class="form-control format-money" id="sale_price" placeholder="Giá khuyến mãi" name="sale_price" value="{{ number_format((float)old('sale_price', $data->sale_price), 0, ',', '.') }}" />
                             </div>
                             <!-- Charge tax check box -->
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="1" id="is_tax" name="is_tax" @checked(old('is_tax')) />
+                                <input class="form-check-input" type="checkbox" value="1" id="is_tax" name="is_tax" @checked(old('is_tax', $data->is_tax)) />
                                 <label class="form-label" for="is_tax"> Tính thuế cho sản phẩm này </label>
                             </div>
                             <!-- Instock switch -->
@@ -370,7 +371,7 @@
                                 <span class="mb-0 h6">Còn hàng</span>
                                 <div class="w-25 d-flex justify-content-end">
                                     <label class="switch switch-primary switch-sm me-4 pe-2">
-                                        <input type="checkbox" class="switch-input" name="is_in_stock" @checked(old('is_in_stock', true)) />
+                                        <input type="checkbox" class="switch-input" name="is_in_stock" @checked(old('is_in_stock', $data->is_in_stock)) />
                                         <span class="switch-toggle-slider">
                                             <span class="switch-on">
                                                 <span class="switch-off"></span>
@@ -394,7 +395,7 @@
                                 <select id="supplier_id" name="supplier_id" class="select2 form-select" data-placeholder="Chọn nhà cung cấp">
                                     <option value=""></option>
                                     @foreach ($suppliers as $item)
-                                        <option value="{{ $item->id }}" @selected(old('supplier_id') == $item->id)>
+                                        <option value="{{ $item->id }}" @selected(old('supplier_id', $data->supplier_id) == $item->id)>
                                             {{ $item->company_name }}
                                         </option>
                                     @endforeach
@@ -407,7 +408,7 @@
                                     data-allow-clear="true" data-placeholder="Chọn danh mục">
                                     <option value="">Vui lòng chọn</option>
                                     @foreach ($categories as $item)
-                                        <option value="{{ $item->id }}" @selected(old('category_id') == $item->id)>
+                                        <option value="{{ $item->id }}" @selected(old('category_id', $data->category_id) == $item->id)>
                                             {{ $item->name }}
                                         </option>
                                     @endforeach
@@ -419,7 +420,7 @@
                                 <select id="collection_id" name="collection_id" class="select2 form-select" data-placeholder="Bộ sưu tập">
                                     <option value=""></option>
                                     @foreach ($collections as $item)
-                                        <option value="{{ $item->id }}" @selected(old('collection_id') == $item->id)>
+                                        <option value="{{ $item->id }}" @selected(old('collection_id', $data->collection_id) == $item->id)>
                                             {{ $item->name }}
                                         </option>
                                     @endforeach
@@ -431,7 +432,7 @@
                                 <select id="status" name="status" class="select2 form-select" data-placeholder="Đã xuất bản">
                                     <option value=""></option>
                                     @foreach ($status as $key => $item)
-                                        <option value="{{ $key }}" @selected(old('status', App\Models\Product::STATUS_PUBLISHED) == $key)>
+                                        <option value="{{ $key }}" @selected(old('status', $data->status) == $key)>
                                             {{ $item }}
                                         </option>
                                     @endforeach
@@ -443,7 +444,7 @@
                                 <select id="hashtag" class="select2 form-select" multiple data-allow-clear="true"
                                     name="hashtags[]">
                                     @foreach ($hashtags as $item)
-                                        <option value="{{ $item->id }}" @selected(in_array($item->id, old('hashtags', [])))>
+                                        <option value="{{ $item->id }}" @selected(in_array($item->id, old('hashtags', ($data->hashtags ? explode(', ', $data->hashtags) : []))))>
                                             {{ $item->name }}</option>
                                     @endforeach
                                 </select>

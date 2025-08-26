@@ -37,8 +37,13 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
         Route::get('ajax-get-list', [HashTagController::class, 'ajaxGetList'])->name('ajaxGetList');
     });
     Route::prefix('ecommerce')->name('ecommerce.')->group(function () {
+        Route::get('/', [EcommerceController::class, 'list'])->name('list');
+        Route::get('/ajax-get-data', [EcommerceController::class, 'ajaxGetData'])->name('ajaxGetData');
         Route::get('/create', [EcommerceController::class, 'create'])->name('create');
         Route::post('/store', [EcommerceController::class, 'store'])->name('store');
+        Route::get('/edit/{slug}', [EcommerceController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [EcommerceController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [EcommerceController::class, 'destroy'])->name('destroy');
     });
     Route::get('media', function () {
         return view('admin.modules.media.index');

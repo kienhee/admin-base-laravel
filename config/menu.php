@@ -25,6 +25,10 @@ return [
         'icon' => 'bx-cart-alt',
         'children' => [
             [
+                'title' => 'Danh sách',
+                'url' => 'admin.ecommerce.list',
+            ],
+            [
                 'title' => 'Thêm mới',
                 'url' => 'admin.ecommerce.create',
             ],
